@@ -1,9 +1,12 @@
 import 'package:App/util/add_player_dialogue_box.dart';
 import 'package:App/util/add_player_menu_box.dart';
+import 'package:App/util/game_end_box.dart';
 import 'package:App/util/add_player_menu_main_box.dart';
 import 'package:flutter/material.dart';
 import 'package:App/classes/player.dart';
 import 'package:App/util/player_list.dart';
+import 'package:App/classes/session.dart';
+import 'package:App/classes/game.dart';
 
 class Basketball extends StatefulWidget {
   const Basketball({super.key});
@@ -27,9 +30,11 @@ class _BasketballState extends State<Basketball> {
     Player("DP"),
   ];
 
+  int teamSize = 5;
+
   void saveNewPlayer(int index) {
     setState(() {
-      players.insert(index,Player(_controller.text));
+      players.insert(index, Player(_controller.text));
       Navigator.of(context).pop();
       Navigator.of(context).pop();
       _controller.clear();
@@ -52,20 +57,20 @@ class _BasketballState extends State<Basketball> {
     showDialog(
         context: context,
         builder: (context) {
-
-          return (main) ?
-          AddPlayerMenuMainBox(
-            addPlayer: (index) => addPlayer(index),
-            index: index,
-            playersLength: players.length,
-          )
-          :
-          AddPlayerMenuBox(
-            addPlayer: (index) => addPlayer(index),
-            index: index,
-            player: players[index],
-            playersLength: players.length,
-          );
+          return (main)
+              ? AddPlayerMenuMainBox(
+                  addPlayer: (index) => addPlayer(index),
+                  promptTeamOff: (teamSize)=>promptTeamOff(teamSize),
+                  index: index,
+                  playersLength: players.length,
+                  teamSize: teamSize,
+                )
+              : AddPlayerMenuBox(
+                  addPlayer: (index) => addPlayer(index),
+                  index: index,
+                  player: players[index],
+                  playersLength: players.length,
+                );
         });
   }
 
@@ -75,20 +80,51 @@ class _BasketballState extends State<Basketball> {
     });
   }
 
-  void movePlayers(int oldIndex, int newIndex){
+  void movePlayers(int oldIndex, int newIndex) {
     setState(() {
+      // Accounts for when moving tile down the list
+      if (oldIndex < newIndex) {
+        newIndex--;
+      }
+      // get the tile we are moving
+      final player = players.removeAt(oldIndex);
 
-    // Accounts for when moving tile down the list
-    if (oldIndex < newIndex){
-      newIndex--;
-    }
-    // get the tile we are moving
-    final player = players.removeAt(oldIndex);
-
-    // place tile in the new position
-    players.insert(newIndex, player);
-
+      // place tile in the new position
+      players.insert(newIndex, player);
     });
+  }
+
+  // Add the team who came off to the end of players list
+  void addTeam(List<Player> teamOff) {
+    setState(() {
+      players = players + teamOff;
+      Navigator.of(context).pop();
+    });
+  }
+
+  // Handles Team Coming off
+  void promptTeamOff(int teamSize) {
+    List<Player> teamOff = [];
+
+    //Edit this to a slice function
+    for (int i = 0; i < teamSize; i++) {
+      Player playerOff = players.removeAt(0);
+      teamOff.add(playerOff);
+    }
+    showDialog(
+        context: context,
+        builder: (context) {
+          return GameEndBox(teamOff: teamOff, handleTeamOff: (teamBackOn)=>handleTeamOff(teamBackOn));
+        });
+  }
+
+  void handleTeamOff(List<Player> teamBackOn){
+    setState(() {
+      players = players + teamBackOn;
+      Navigator.of(context).pop();
+      Navigator.of(context).pop();
+    });
+
   }
 
   @override
@@ -112,11 +148,10 @@ class _BasketballState extends State<Basketball> {
           centerTitle: true,
         ),
         body: PlayerList(
-          players: players,
-          delete: delete,
-          movePlayers: movePlayers,
-          addPlayerMenu: addPlayerMenu
-        ),
+            players: players,
+            delete: delete,
+            movePlayers: movePlayers,
+            addPlayerMenu: addPlayerMenu),
         floatingActionButton: FloatingActionButton(
           onPressed: () => addPlayerMenu(players.length, true),
           backgroundColor: Colors.white,

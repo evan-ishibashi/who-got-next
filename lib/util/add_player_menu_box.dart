@@ -39,7 +39,7 @@ class AddPlayerMenuBox extends StatelessWidget {
             //Buttons
             Row(
               children: [
-              //Button to add Player mid-list
+              //Button to add Player End of list
               Button(text: "Add Player to End of List", onPressed: () => addPlayer(playersLength)),
 
               ]

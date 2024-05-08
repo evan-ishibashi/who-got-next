@@ -7,12 +7,16 @@ class AddPlayerMenuMainBox extends StatelessWidget {
     required this.index,
     required this.addPlayer,
     required this.playersLength,
+    required this.promptTeamOff,
+    required this.teamSize,
   });
 
 
   final int index;
   final int playersLength;
+  final int teamSize;
   final void Function(int) addPlayer;
+  final void Function(int) promptTeamOff;
 
 
   @override
@@ -20,7 +24,7 @@ class AddPlayerMenuMainBox extends StatelessWidget {
     return AlertDialog(
       backgroundColor: Colors.white,
       content: Container(
-        height: 60,
+        height: 100,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
 
@@ -30,6 +34,13 @@ class AddPlayerMenuMainBox extends StatelessWidget {
               children: [
               //Button to add Player at end of List
               Button(text: "Add Player to End of List", onPressed: () => addPlayer(playersLength)),
+
+              ]
+            ),
+            Row(
+              children: [
+              //Button to add Player at end of List
+              Button(text: "End Game", onPressed: () => promptTeamOff(teamSize)),
 
               ]
             )
