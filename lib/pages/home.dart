@@ -6,9 +6,19 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:  Color.fromARGB(232, 232, 232, 232),
+      backgroundColor: Color.fromARGB(232, 232, 232, 232),
       body: SafeArea(
-        child: Text('Hello'),
+        child: Column(
+          children: [
+            GestureDetector(
+                onTap: () => {
+                  Navigator.pushNamed(context, '/basketball')
+                },
+                child: Card(
+                  child: Text("basketball"),
+                ))
+          ],
+        ),
       ),
     );
   }

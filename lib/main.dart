@@ -1,6 +1,5 @@
 import 'package:App/pages/home.dart';
 import 'package:flutter/material.dart';
-// import 'package:App/pages/home.dart';
 import 'package:App/pages/basketball.dart';
 
 void main() {
@@ -15,7 +14,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Basketball(),
+      routes: {
+        '/': (context) => HomePage(),
+        '/basketball':(context) => Basketball(),
+
+      },
     );
   }
 }

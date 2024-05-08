@@ -145,7 +145,7 @@ class _BasketballState extends State<Basketball> {
               color: Colors.white,
             ),
           ),
-          centerTitle: true,
+          centerTitle: false,
         ),
         body: PlayerList(
             players: players,
